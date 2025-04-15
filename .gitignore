@@ -1,0 +1,44 @@
+# Python and virtual env
+__pycache__/
+*.py[cod]
+*.so
+dist/
+build/
+*.pyd
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+ENV/
+env/
+
+# Django + logs/db
+*.log
+db.sqlite3
+media/
+staticfiles/
+
+# Environment variables
+.env
+*.env
+
+# Big ML files
+*.pt
+*.pth
+*.pkl
+*.h5
+*.ckpt
+*.npz
+
+# IDE/editor stuff
+.vscode/
+.idea/
+.DS_Store
+
+#terraform files
+terraform/.terraform
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+
