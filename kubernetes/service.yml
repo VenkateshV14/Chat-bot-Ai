@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: chatbot
-  type: ClusterIP # changed from LoadBalancer to ClusterIP
+  type: ClusterIP
   ports:
     - protocol: TCP
       port: 80
