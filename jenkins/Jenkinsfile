@@ -14,11 +14,13 @@ pipeline {
 
         stage('Install Requirements & Run Tests') {
             steps {
-                sh 'python3 -m venv venv'
-                sh 'source venv/bin/activate && pip install -r requirements.txt'
-                sh 'python3 manage.py test || echo "Skipping test failures for now..."'
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate && pip install -r requirements.txt && python manage.py test
+                '''
             }
         }
+
 
         stage('Build Docker Image') {
             steps {

@@ -1,3 +1,13 @@
+- name: Install Python Venv Support
+  hosts: ec2
+  become: true
+  tasks:
+    - name: Install python3-venv
+      apt:
+        name: python3-venv
+        state: present
+        update_cache: true
+
 - name: Install Docker
   hosts: ec2
   become: true
@@ -5,7 +15,6 @@
     - name: Update apt cache
       apt:
         update_cache: yes
-
     - name: Install required packages
       apt:
         name:
