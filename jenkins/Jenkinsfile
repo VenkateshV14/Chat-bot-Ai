@@ -63,6 +63,8 @@ pipeline {
                 script {
                     sh "aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME"
                     sh "kubectl set image deployment/chatbot-deployment $CONTAINER_NAME=$DOCKER_IMAGE:latest"
+                    sh "kubectl rollout restart deployment chatbot-deployment"
+                    }
                 }
             }
         }

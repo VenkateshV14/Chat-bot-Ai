@@ -15,6 +15,7 @@ spec:
       containers:
         - name: chatbot-container
           image: petercephas52/chatbot-django:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           env:
@@ -28,5 +29,3 @@ spec:
                 secretKeyRef:
                   name: chatbot-secrets
                   key: DJANGO_SECRET_KEY
-
-
