@@ -102,7 +102,7 @@ resource "aws_security_group" "jenkins_sg" {
 
 resource "aws_instance" "jenkins_ec2" {
   ami                         = "ami-084568db4383264d4"
-  instance_type               = "t2.micro"
+  instance_type               = "t3.medium"
   subnet_id                   = aws_subnet.public_subnet_1.id
   vpc_security_group_ids      = [aws_security_group.jenkins_sg.id]
   associate_public_ip_address = true

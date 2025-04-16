@@ -2,3 +2,4 @@
 - import_playbook: install_jenkins.yml
 - import_playbook: install_kubectl.yml
 - import_playbook: install_aws-cli.yml
+- import_playbook: install_python.yml

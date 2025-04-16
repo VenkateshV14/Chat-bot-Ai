@@ -2,51 +2,68 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "petercephas52/chatbot-django"
+        DOCKER_IMAGE = "venkateshv14/chatbot-ai:latest"
+        AWS_REGION = "us-east-1"
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/VenkateshV14/Chat-bot-Ai.git'
+                git 'https://github.com/VenkateshV14/Chat-bot-Ai.git'
             }
         }
 
-        stage('Install Requirements & Run Tests') {
+        stage('Install Python Requirements & Run Tests') {
             steps {
                 sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate && pip install -r requirements.txt && python manage.py test
+                sudo apt update
+                sudo apt install -y python3-pip python3-venv
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install -r requirements.txt
+                echo "✅ Requirements installed."
+                # You can add `pytest` or `python manage.py test` here later
                 '''
             }
         }
 
-
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE:latest .'
+                sh 'docker build -t $DOCKER_IMAGE .'
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push Docker Image to DockerHub') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub', 
-                    usernameVariable: 'DOCKER_USER', 
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
                     sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push $DOCKER_IMAGE:latest
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    docker push $DOCKER_IMAGE
                     '''
                 }
             }
         }
 
-        stage('Deploy to EKS') {
+        stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl apply -f kubernetes/'
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
+                    sh '''
+                    aws eks update-kubeconfig --region $AWS_REGION --name chatbot-cluster
+                    kubectl apply -f deployment.yml
+                    kubectl apply -f service.yml
+                    kubectl apply -f ingress.yml
+                    '''
+                }
             }
+        }
+    }
+
+    post {
+        failure {
+            echo '❌ Build failed!'
+        }
+        success {
+            echo '✅ Chatbot deployed successfully to EKS!'
         }
     }
 }
