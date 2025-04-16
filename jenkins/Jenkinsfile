@@ -35,12 +35,15 @@ pipeline {
 
         stage('Push Docker Image to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                    sh "docker push $DOCKER_IMAGE:latest"
+                withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKERHUB_PASSWORD')]) {
+                    sh '''
+                    echo "$DOCKERHUB_PASSWORD" | docker login -u petercephas52 --password-stdin
+                    docker push petercephas52/chatbot-django:latest
+                    '''
                 }
             }
         }
+
 
         stage('Deploy to EKS') {
             steps {
