@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "venkateshv14/chatbot-ai:latest"
+        DOCKER_IMAGE = "petercephas52/chatbot-django:latest"
         AWS_REGION = "us-east-1"
     }
 
