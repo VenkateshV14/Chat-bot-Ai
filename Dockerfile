@@ -1,25 +1,22 @@
-# Use official Python image
-FROM python:3.10-slim
+# Stage 1: Build dependencies
+FROM python:3.12-slim AS builder
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+WORKDIR /app
+COPY requirements.txt .
+RUN apt-get update && apt-get install -y gcc \
+    && pip install --upgrade pip \
+    && pip install --prefix=/install -r requirements.txt \
+    && apt-get remove -y gcc \
+    && apt-get autoremove -y \
+    && apt-get clean
 
-# Set work directory
+# Stage 2: Run
+FROM python:3.12-slim
+
+ENV PATH="/install/bin:$PATH"
 WORKDIR /app
 
-# Upgrade pip first
-RUN python -m pip install --upgrade pip
-
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy project
+COPY --from=builder /install /install
 COPY . .
 
-# Expose port
-EXPOSE 8000
-
-# Run migrations and start the app on container start
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+CMD ["gunicorn", "chatbot_project.wsgi:application", "--bind", "0.0.0.0:8000"]
