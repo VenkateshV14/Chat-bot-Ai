@@ -2,10 +2,9 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "petercephas52/chatbot-django"
+        DOCKER_IMAGE = "petercephas52/chatbot-django"
+        AWS_REGION = "us-east-1"
         CLUSTER_NAME = "chatbot-cluster"
-        NAMESPACE = "default"
-        DEPLOYMENT_NAME = "chatbot-deployment"
     }
 
     stages {
@@ -15,42 +14,37 @@ pipeline {
             }
         }
 
-        stage('python and requirements installe') {
+        stage('Install Python Requirements & Run Tests') {
             steps {
-            sh '''
-                set -e
-                python3 -m venv venv
-                . venv/bin/activate
-                python -m pip install --upgrade pip
-                pip install -r requirements.txt
-            '''
+                sh 'python3 -m pip install --upgrade pip'
+                sh 'pip install -r requirements.txt'
+                // Add unit tests here if any
             }
         }
-            
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                script {
+                    sh "docker build -t $DOCKER_IMAGE:latest ."
+                }
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push Docker Image to Docker Hub') {
             steps {
-                withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKER_HUB_PASS')]) {
-                    sh '''
-                        echo "$DOCKER_HUB_PASS" | docker login -u petercephas52 --password-stdin
-                        docker push $IMAGE_NAME
-                    '''
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                    sh "docker push $DOCKER_IMAGE:latest"
                 }
             }
         }
 
         stage('Deploy to EKS') {
             steps {
-                sh '''
-                    aws eks update-kubeconfig --region us-east-1 --name $CLUSTER_NAME
-                    kubectl set image deployment/$DEPLOYMENT_NAME chatbot-container=$IMAGE_NAME -n $NAMESPACE
-                '''
+                script {
+                    sh "aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME"
+                    sh "kubectl set image deployment/chatbot-deployment chatbot=$DOCKER_IMAGE:latest"
+                }
             }
         }
     }
