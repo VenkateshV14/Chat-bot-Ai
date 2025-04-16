@@ -49,7 +49,7 @@ pipeline {
             steps {
                 sh '''
                     aws eks update-kubeconfig --region us-east-1 --name $CLUSTER_NAME
-                    kubectl set image deployment/$DEPLOYMENT_NAME chatbot=$IMAGE_NAME -n $NAMESPACE
+                    kubectl set image deployment/$DEPLOYMENT_NAME chatbot-container=$IMAGE_NAME -n $NAMESPACE
                 '''
             }
         }
