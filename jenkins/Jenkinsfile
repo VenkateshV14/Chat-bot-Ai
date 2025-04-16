@@ -15,14 +15,14 @@ pipeline {
             }
         }
 
-        stage('Install Python Requirements & Run Tests') {
-            steps {
-                steps {
-                    sh 'python3 -m pip install --upgrade pip'
-                    sh 'python3 -m venv venv'
-                    sh 'pip install -r requirements.txt'
-                }
-            }
+        steps {
+            sh '''
+                set -e
+                python3 -m venv venv
+                . venv/bin/activate
+                python -m pip install --upgrade pip
+                pip install -r requirements.txt
+            '''
         }
 
         stage('Build Docker Image') {
