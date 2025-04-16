@@ -5,6 +5,7 @@ pipeline {
         DOCKER_IMAGE = "petercephas52/chatbot-django"
         AWS_REGION = "us-east-1"
         CLUSTER_NAME = "chatbot-cluster"
+        CONTAINER_NAME = "chatbot-container" 
     }
 
     stages {
@@ -37,19 +38,31 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKERHUB_PASSWORD')]) {
                     sh '''
-                    echo "$DOCKERHUB_PASSWORD" | docker login -u petercephas52 --password-stdin
-                    docker push petercephas52/chatbot-django:latest
+                        echo "$DOCKERHUB_PASSWORD" | docker login -u petercephas52 --password-stdin
+                        docker push petercephas52/chatbot-django:latest
                     '''
                 }
             }
         }
 
+        stage('Clean Up Docker Images') {
+            steps {
+                sh '''
+                    echo "🧹 Removing old chatbot-django images except latest..."
+                    docker images --filter=reference='petercephas52/chatbot-django' --format "{{.ID}} {{.Tag}}" \
+                    | grep -v latest | awk '{print $1}' | xargs -r docker rmi || true
+
+                    echo "🧹 Removing dangling images..."
+                    docker image prune -f || true
+                '''
+            }
+        }
 
         stage('Deploy to EKS') {
             steps {
                 script {
                     sh "aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME"
-                    sh "kubectl set image deployment/chatbot-deployment chatbot-container=$DOCKER_IMAGE:latest"
+                    sh "kubectl set image deployment/chatbot-deployment $CONTAINER_NAME=$DOCKER_IMAGE:latest"
                 }
             }
         }
