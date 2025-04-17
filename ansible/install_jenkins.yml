@@ -30,3 +30,9 @@
         name: jenkins
         enabled: yes
         state: started
+
+    - name: jenkins user docker commands
+      user:
+        name: jenkins
+        groups: docker
+        append: yes
