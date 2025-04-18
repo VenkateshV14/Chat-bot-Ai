@@ -81,7 +81,7 @@ terraform apply
 
 ![Final App](images/final-devops-app.JPG)
 
-## 📌 Key-points
+## 📌 Key Takeaways:
 - End-to-end DevOps flow: from infrastructure to deployment
 - Real-time updates with GitHub Webhooks
 - Production-grade setup using AWS best practices
