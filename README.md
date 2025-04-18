@@ -58,11 +58,12 @@ This project demonstrates a complete CI/CD pipeline for deploying a Django-based
 ```bash
 cd terraform/
 terraform init
+terraform plan
 terraform apply
 ```
 ### 2. Configure Jenkins
 - Add DockerHub and AWS credentials
-- Set up pipeline using jenkins/Jenkinsfile- 
+- Set up pipeline using jenkins/Jenkinsfile 
 - Ensure Webhook triggers on push
 
 ### 3. Trigger Deployment
@@ -71,16 +72,16 @@ terraform apply
 - Kubernetes is updated with the latest image
 - Chatbot is live on the EKS LoadBalancer
 
-## 🖼️ Screenshots
-image1.png: Terraform EKS provisioning
+## 🖼️ Highlights
+![terraform output](images/terraform-output.JPG)
 
-image2.png: Jenkins CI/CD pipeline execution
+![jenkins](images/jenkins-output.JPG)
 
-image3.png: Webhook trigger in GitHub
+![webhooks](images/webhooks.JPG)
 
-image4.png: Deployed Chatbot UI
+![Final App](images/final-devops-app.JPG)
 
-## 📌 Highlights
+## 📌 Key-points
 - End-to-end DevOps flow: from infrastructure to deployment
 - Real-time updates with GitHub Webhooks
 - Production-grade setup using AWS best practices
@@ -89,4 +90,4 @@ image4.png: Deployed Chatbot UI
 ## 🤝 Author
 - **Venkatesh V**
 - DevOps Engineer | Cloud Enthusiast
-LinkedIn • []{Hashnode Blog}
+[LinkedIn](https://www.linkedin.com/in/venky-venkatesh) • [Hashnode Blog](h) • [Portfolio](https://www.venky-devops-engineer-vde.xyz/) • [Live Resume](https://www.ganeshinfo.life/)
