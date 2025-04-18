@@ -39,6 +39,7 @@ This project demonstrates a complete CI/CD pipeline for deploying a Django-based
 ├── Dockerfile              
 ├── .gitignore              
 ├── requirements.txt
+├── images
 └── README.md               
 ```
 
@@ -90,4 +91,4 @@ terraform apply
 ## 🤝 Author
 - **Venkatesh V**
 - DevOps Engineer | Cloud Enthusiast
-- [LinkedIn](https://www.linkedin.com/in/venky-venkatesh) • [Hashnode Blog](h) • [Portfolio](https://www.venky-devops-engineer-vde.xyz/) • [Live Resume](https://www.ganeshinfo.life/)
+- [LinkedIn](https://www.linkedin.com/in/venky-venkatesh) • [Hashnode Blog](https://devops-automation.hashnode.dev/building-an-end-to-end-devops-pipeline-on-aws-with-jenkins-docker-kubernetes-terraform-and-ansible) • [Portfolio](https://www.venky-devops-engineer-vde.xyz/) • [Live Resume](https://www.ganeshinfo.life/)
