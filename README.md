@@ -90,4 +90,4 @@ terraform apply
 ## 🤝 Author
 - **Venkatesh V**
 - DevOps Engineer | Cloud Enthusiast
-[LinkedIn](https://www.linkedin.com/in/venky-venkatesh) • [Hashnode Blog](h) • [Portfolio](https://www.venky-devops-engineer-vde.xyz/) • [Live Resume](https://www.ganeshinfo.life/)
+- [LinkedIn](https://www.linkedin.com/in/venky-venkatesh) • [Hashnode Blog](h) • [Portfolio](https://www.venky-devops-engineer-vde.xyz/) • [Live Resume](https://www.ganeshinfo.life/)
